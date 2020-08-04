@@ -4,12 +4,13 @@ from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import NoSuchElementException
 import pickle
 import time
+import subprocess
 
 class Soundcloud:
     
     def __init__(self):
         self.base_url = 'http://www.soundcloud.com/'
-#         self.driver_path = "/home/justin/program_files/chromedriver"
+        self.load_driver_path()
         
     def launch_chrome(self, headless = False):
         """Launches a chrome browser."""
@@ -57,10 +58,24 @@ class Soundcloud:
         element = self.find_element(x_path)
         hover = ActionChains(self.driver).move_to_element(element)
         hover.perform()
-        
+
+    def find_files(self,file_name):
+        command = ['locate', file_name]
+        output = subprocess.Popen(command, stdout=subprocess.PIPE).communicate()[0]
+        output = output.decode()
+        self.search_results = output.split('\n')
+        return self.search_results
+
     def save_driver_path(self):
-        self.driver_path = input("What is the path to your chromedriver?")
-        self.pickle.dump( self.driver_path , open("driver_path.pkl","wb"))
+        print("Trying to find the path to your chromedriver. See the list below:")
+        try:
+            self.find_files('chromedriver')
+            for path in self.search_results:
+                print(path)
+        except:
+            print('Search function to find a chromedriver on your system failed. This search only works on linux.')
+        self.driver_path = input("What is the path to your chromedriver?\n")
+        pickle.dump( self.driver_path , open("driver_path.pkl","wb"))
         
     def load_driver_path(self):
         self.driver_path = pickle.load(open("driver_path.pkl", "rb"))

@@ -10,3 +10,4 @@ d.click_on_recent_like()
 while True:
     if input("End the program? (Y/N)\n\n") == "Y":
         d.driver.quit()
+        break
