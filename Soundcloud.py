@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import NoSuchElementException
+from pathlib import Path
 import pickle
 import time
 import subprocess
@@ -10,6 +11,9 @@ class Soundcloud:
     
     def __init__(self):
         self.base_url = 'http://www.soundcloud.com/'
+        self.current_dir = Path(__file__).parent.absolute()
+        self.driver_pkl_file_path = self.current_dir / "driver_path.pkl"
+        self.cookies_pkl_file_path = self.current_dir / "cookies.pkl"
         self.load_driver_path()
         
     def launch_chrome(self, headless = False):
@@ -42,7 +46,7 @@ class Soundcloud:
         return True
 
     def open(self, url):
-        """Goes to the Poshmark page given."""
+        """Goes to the Soundcloud page given."""
         url = self.base_url + url
         self.driver.get(url)
 
@@ -75,15 +79,15 @@ class Soundcloud:
         except:
             print('Search function to find a chromedriver on your system failed. This search only works on linux.')
         self.driver_path = input("What is the path to your chromedriver?\n")
-        pickle.dump( self.driver_path , open("driver_path.pkl","wb"))
+        pickle.dump( self.driver_path , open(self.driver_pkl_file_path,"wb"))
         
     def load_driver_path(self):
-        self.driver_path = pickle.load(open("driver_path.pkl", "rb"))
+        self.driver_path = pickle.load(open(self.driver_pkl_file_path, "rb"))
         
     def load_cookies(self):
         """Loads cookies from the pickle cookies file. Browser needs to exist already"""
         self.open("")
-        cookies = pickle.load(open(f"cookies.pkl", "rb"))
+        cookies = pickle.load(open(self.cookies_pkl_file_path, "rb"))
         for cookie in cookies:
             self.driver.add_cookie(cookie)
         self.open("")
@@ -91,7 +95,7 @@ class Soundcloud:
     def save_cookies(self):
         """Saves the current cookies. Use this after you log in for the first time."""
         self.open("")
-        pickle.dump( self.driver.get_cookies() , open(f"cookies.pkl","wb"))
+        pickle.dump( self.driver.get_cookies() , open(self.cookies_pkl_file_path,"wb"))
         
     def open_likes_page(self):
         """Opens the likes page."""
