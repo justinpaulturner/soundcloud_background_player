@@ -14,7 +14,8 @@ class Soundcloud:
         self.current_dir = Path(__file__).parent.absolute()
         self.driver_pkl_file_path = self.current_dir / "driver_path.pkl"
         self.cookies_pkl_file_path = self.current_dir / "cookies.pkl"
-        self.load_driver_path()
+        if self.driver_pkl_file_path.exists():
+            self.load_driver_path()
         
     def launch_chrome(self, headless = False):
         """Launches a chrome browser."""
