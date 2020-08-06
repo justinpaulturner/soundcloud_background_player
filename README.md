@@ -3,11 +3,12 @@ Plays your soundcloud likes playlist in the background on a headless chrome brow
 
 ### Steps: 
 - Run setup.py
-- Sign into the browser that pops up
+- Sign into Soundcloud on the browser that pops up
 - Run Play_Likes.py
 
 ### Requirements:
+- Python 3.7 or above
 - Linux/Mac OS
-- Chrome installation on desktop
+- Chrome installation
 - Selenium
-- Chrome driver for Chrome version.
+- Chrome driver for Chrome version
