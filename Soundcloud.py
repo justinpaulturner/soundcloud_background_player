@@ -101,11 +101,22 @@ class Soundcloud:
     def open_likes_page(self):
         """Opens the likes page."""
         self.open("you/likes")
+        time.sleep(2)
         
-    def click_on_recent_like(self):
-        play_button_x_path = """//*[@id="content"]/div/div/div[2]/div/section/div/div[2]/div/ul/li[1]/div/div[1]/div[1]/a"""
-        button = self.find_element(play_button_x_path)
+    def click_on(self, button):
+        if button == "like":
+            x_path = """//*[@id="content"]/div/div/div[2]/div/section/div/div[2]/div/ul/li[1]/div/div[1]/div[1]/a"""
+        elif button == "repeat":
+            x_path = """//*[@id="app"]/div[4]/section/div/div[3]/div[2]/button"""
+        elif button == "next":
+            x_path = """//*[@id="app"]/div[4]/section/div/div[3]/button[3]"""
+        elif button == "shuffle":
+            x_path = """//*[@id="app"]/div[4]/section/div/div[3]/div[1]/button"""
+        elif button == "back":
+            x_path = """//*[@id="app"]/div[4]/section/div/div[3]/button[1]"""
+        if button == "play":
+            x_path = """//*[@id="app"]/div[4]/section/div/div[3]/button[2]"""
+        button = self.find_element(x_path)
         self.driver.implicitly_wait(2)
         ActionChains(self.driver).move_to_element(button).click(button).perform()
         
-    
