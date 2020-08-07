@@ -64,9 +64,9 @@ class Soundcloud:
         hover = ActionChains(self.driver).move_to_element(element)
         hover.perform()
 
-    def find_files(self,file_name):
-        command = ['locate', file_name]
-        output = subprocess.Popen(command, stdout=subprocess.PIPE).communicate()[0]
+    def find(self, file_name):
+        command = ['locate'+ ' ' + file_name]
+        output = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True).communicate()[0]
         output = output.decode()
         self.search_results = output.split('\n')
         return self.search_results
@@ -74,7 +74,7 @@ class Soundcloud:
     def save_driver_path(self):
         print("Trying to find the path to your chromedriver. See the list below:")
         try:
-            self.find_files('chromedriver')
+            self.find('chromedriver')
             for path in self.search_results:
                 print(path)
         except:
