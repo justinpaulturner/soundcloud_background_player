@@ -3,7 +3,7 @@ import time
 
 d = Soundcloud()
 
-d.launch_chrome(headless = False)
+d.launch_chrome(headless = True)
 d.load_cookies()
 d.open_likes_page()
 d.scroll_to_bottom()
