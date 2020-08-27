@@ -114,9 +114,41 @@ class Soundcloud:
             x_path = """//*[@id="app"]/div[4]/section/div/div[3]/div[1]/button"""
         elif button == "back":
             x_path = """//*[@id="app"]/div[4]/section/div/div[3]/button[1]"""
-        if button == "play":
+        elif button == "play":
             x_path = """//*[@id="app"]/div[4]/section/div/div[3]/button[2]"""
+        elif button == "single_track_play":
+            x_path = """//*[@id="content"]/div/div[2]/div/div[2]/div[2]/div/div/div[1]/a"""
         button = self.find_element(x_path)
-        self.driver.implicitly_wait(2)
+        self.driver.implicitly_wait(.3)
         ActionChains(self.driver).move_to_element(button).click(button).perform()
         
+    def get_liked_tracks_links_list(self):
+        self.like_link_list = []
+        for num in range(1,200):
+            if self.exists_by_xpath(f"""//*[@id="content"]/div/div/div[2]/div/section/div/div[2]/div/ul/li[{num}]/div/div[1]/a"""):
+                self.like_link_list.append(self.find_element(f"""//*[@id="content"]/div/div/div[2]/div/section/div/div[2]/div/ul/li[{num}]/div/div[1]/a""").get_attribute("href"))
+            else:
+                break
+        return self.like_link_list
+    
+    def track_is_playing(self):
+        return self.find_element("""//*[@id="content"]/div/div[2]/div/div[2]/div[2]/div/div/div[1]/a""").get_attribute("title") == "Pause"
+    
+    def scroll_to_bottom(self):
+        SCROLL_PAUSE_TIME = 0.5
+
+        # Get scroll height
+        last_height = self.driver.execute_script("return document.body.scrollHeight")
+
+        while True:
+            # Scroll down to bottom
+            self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+
+            # Wait to load page
+            time.sleep(SCROLL_PAUSE_TIME)
+
+            # Calculate new scroll height and compare with last scroll height
+            new_height = self.driver.execute_script("return document.body.scrollHeight")
+            if new_height == last_height:
+                break
+            last_height = new_height

@@ -1,24 +1,18 @@
 from Soundcloud import Soundcloud
+import time
 
 d = Soundcloud()
 
-d.launch_chrome(headless = True)
+d.launch_chrome(headless = False)
 d.load_cookies()
 d.open_likes_page()
-d.click_on('play')
-d.click_on('repeat')
-d.click_on('repeat')
+d.scroll_to_bottom()
+link_list = d.get_liked_tracks_links_list()
 
-
-while True:
-    if input("I hope you like the tunes.\nCOMMANDS: play, pause, next, back, shuffle.\n") == "next":
-        d.click_on("next")
-    elif input("I hope you like the tunes.\nCOMMANDS: play, pause, next, back, shuffle.\n") == "back":
-        d.click_on("back")
-        d.click_on("back")
-    elif input("I hope you like the tunes.\nCOMMANDS: play, pause, next, back, shuffle.\n") == "shuffle":
-        d.click_on("shuffle")
-    elif input("I hope you like the tunes.\nCOMMANDS: play, pause, next, back, shuffle.\n") == "pause":
-        d.click_on("play")
-    elif input("I hope you like the tunes.\nCOMMANDS: play, pause, next, back, shuffle.\n") == "play":
-        d.click_on("play")
+for link in link_list:
+    d.driver.get(link)
+    time.sleep(.25)
+    d.click_on("single_track_play")
+    while d.track_is_playing():
+        print("Waiting while track plays.",end="\r")
+        time.sleep(1)
